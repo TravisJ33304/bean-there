@@ -1,0 +1,11 @@
+[project]
+name = "databases-final-project"
+version = "0.1.0"
+description = "Final project for databases course"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi[standard]>=0.115.8",
+    "uvicorn[standard]>=0.34.0",
+    "notebook>=7.4.0",
+    "pymongo>=4.12.0",
+]
