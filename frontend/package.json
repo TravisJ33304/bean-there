@@ -1,0 +1,20 @@
+{
+  "name": "coffee-shop-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.0.0",
+    "axios": "^0.21.1",
+    "vite": "^2.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^1.0.0"
+  }
+}

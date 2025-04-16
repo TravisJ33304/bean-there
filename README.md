@@ -1,7 +1,51 @@
-# Databases Final Project
+# Bean There Coffee Shop Review and Recommendation Application
 
-Travis Jankowski and Rossi Doyle
+## Overview
 
-# Problem Statement
+This project is a web application designed for coffee enthusiasts to discover, review, and receive personalized recommendations for coffee shops. The application leverages FastAPI for the backend, MongoDB for data management, and React.js for the frontend, providing a seamless user experience.
 
-Coffee enthusiasts often face difficulty in finding authentic, high-quality coffee shops that cater to their preferences. Existing platforms usually provide extensive lists of reviews without personalized recommendations based on individual taste and ambiance preferences. This project aims to address the gap by creating a focused web application that lets users discover, review, and receive tailored recommendations for coffee shops. The application will combine user reviews with detailed coffee shop profiles to offer personalized suggestions and improve the overall customer experience.
+## Features
+
+- **User Authentication**: Users can create accounts, log in, and manage their profiles.
+- **Coffee Shop Discovery**: Users can browse a curated list of coffee shops with detailed profiles.
+- **Personalized Recommendations**: The application provides tailored coffee shop suggestions based on user preferences and past reviews.
+- **Responsive Design**: The frontend is built with React.js, ensuring a responsive and interactive user interface.
+
+## Installation
+
+### Backend
+
+1. Navigate to the `backend` directory.
+2. Create a virtual environment and activate it.
+3. Install the required dependencies using the following command:
+
+   ```
+   pip install -r requirements.txt
+   ```
+
+4. Set up your MongoDB connection string in the `.env` file based on the `.env.example` template.
+5. Run the FastAPI application:
+
+   ```
+   uvicorn app.main:app --reload
+   ```
+
+### Frontend
+
+1. Navigate to the `frontend` directory.
+2. Install the required dependencies using npm:
+
+   ```
+   npm install
+   ```
+
+3. Start the React application:
+
+   ```
+   npm run dev
+   ```
+
+## Usage
+
+- Access the frontend application in your web browser at `http://localhost:3000`.
+- Use the application to explore coffee shops, submit reviews, and receive recommendations.
