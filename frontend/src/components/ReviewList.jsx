@@ -1,42 +1,81 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 
-const ReviewList = ({ coffeeShopId }) => {
-  const [reviews, setReviews] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const ReviewList = ({ reviews }) => {
+  const [sortOrder, setSortOrder] = useState("newest");
+  const [filterRating, setFilterRating] = useState(0);
 
-  useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const response = await axios.get(`/api/reviews/${coffeeShopId}`);
-        setReviews(response.data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const sortedReviews = [...reviews].sort((a, b) => {
+    if (sortOrder === "highest") return b.num_rating - a.num_rating;
+    if (sortOrder === "lowest") return a.num_rating - b.num_rating;
+    return b._id.localeCompare(a._id);
+  });
 
-    fetchReviews();
-  }, [coffeeShopId]);
-
-  if (loading) return <p>Loading reviews...</p>;
-  if (error) return <p>Error fetching reviews: {error}</p>;
+  const filteredReviews =
+    filterRating > 0
+      ? sortedReviews.filter(
+          (review) => Math.floor(review.num_rating) === filterRating
+        )
+      : sortedReviews;
 
   return (
-    <div>
-      <h2>Reviews</h2>
-      {reviews.length === 0 ? (
-        <p>No reviews yet.</p>
+    <div className="reviews-container">
+      <div className="reviews-header">
+        <h2 className="reviews-title">Reviews ({reviews.length})</h2>
+        <div className="reviews-controls">
+          <select
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+            className="sort-select"
+          >
+            <option value="newest">Newest</option>
+            <option value="highest">Highest Rating</option>
+            <option value="lowest">Lowest Rating</option>
+          </select>
+
+          <div className="filter-buttons">
+            <button
+              className={filterRating === 0 ? "active-filter" : ""}
+              onClick={() => setFilterRating(0)}
+            >
+              All
+            </button>
+            {[5, 4, 3, 2, 1].map((rating) => (
+              <button
+                key={rating}
+                className={filterRating === rating ? "active-filter" : ""}
+                onClick={() => setFilterRating(rating)}
+              >
+                {rating}★
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {filteredReviews.length === 0 ? (
+        <p className="no-reviews">No reviews match your criteria</p>
       ) : (
-        <ul>
-          {reviews.map((review) => (
-            <li key={review.id}>
-              <p>
-                <strong>{review.user}</strong>: {review.review}
-              </p>
-              <p>Rating: {review.rating}</p>
+        <ul className="reviews-list">
+          {filteredReviews.map((review) => (
+            <li key={review._id} className="review-item">
+              <div className="review-header">
+                <div className="rating-stars">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <span
+                      key={star}
+                      className={
+                        star <= review.num_rating ? "star filled" : "star"
+                      }
+                    >
+                      ★
+                    </span>
+                  ))}
+                </div>
+                <span className="review-rating">
+                  {review.num_rating.toFixed(1)}
+                </span>
+              </div>
+              <p className="review-text">{review.review_text}</p>
             </li>
           ))}
         </ul>

@@ -5,7 +5,8 @@ const CoffeeShopCard = ({ coffeeShop }) => {
     <div className="coffee-shop-card">
       <h2>{coffeeShop.name}</h2>
       <p>
-        Location: {coffeeShop.location.area}, {coffeeShop.location.address}
+        Address: {coffeeShop.location.address}, {coffeeShop.location.city},{" "}
+        {coffeeShop.location.state}
       </p>
       <p>
         Rating: {coffeeShop.rating} ({coffeeShop.review_count} reviews)

@@ -1,9 +1,29 @@
 from bson import ObjectId
-from fastapi import APIRouter
-from app.models.review import Review
+from fastapi import APIRouter, HTTPException
+from app.models.review import Review, ReviewCreate
 from app.db.database import get_collection
 
 router = APIRouter()
+
+
+@router.post("/", response_model=ReviewCreate)
+async def create_review(review: ReviewCreate):
+    """
+    Create a new review for a coffee shop.
+    Args:
+        review (ReviewCreate): The review data to create.
+    Returns:
+        ReviewCreate: The created review data.
+    """
+    shops_collection = get_collection("coffee_shops")
+    coffee_shop_id = review.coffee_shop_id
+    coffee_shop = shops_collection.find_one({"_id": ObjectId(coffee_shop_id)})
+    if not coffee_shop:
+        raise HTTPException(status_code=404, detail="Coffee shop not found")
+    reviews_collection = get_collection("reviews")
+    review_data = review.model_dump()
+    reviews_collection.insert_one(review_data)
+    return review
 
 
 @router.get("/{coffee_shop_id}", response_model=list[Review])

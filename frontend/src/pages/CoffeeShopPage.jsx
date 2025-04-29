@@ -3,7 +3,10 @@ import { useParams } from "react-router-dom";
 import CoffeeShopDetail from "../components/CoffeeShopDetail";
 import ReviewList from "../components/ReviewList";
 import ReviewForm from "../components/ReviewForm";
-// import { fetchCoffeeShop, fetchReviews } from "../services/api";
+import {
+  fetchCoffeeShopById,
+  fetchReviewsByCoffeeShopId,
+} from "../services/api";
 
 const CoffeeShopPage = () => {
   const { id } = useParams();
@@ -12,12 +15,17 @@ const CoffeeShopPage = () => {
 
   useEffect(() => {
     const getCoffeeShop = async () => {
-      const shopData = await fetchCoffeeShop(id);
+      const shopData = await fetchCoffeeShopById(id);
       setCoffeeShop(shopData);
     };
 
     const getReviews = async () => {
-      const reviewData = await fetchReviews(id);
+      const reviewData = await fetchReviewsByCoffeeShopId(id);
+      setReviews(reviewData);
+    };
+
+    const handleReviewSubmit = async () => {
+      const reviewData = await fetchReviewsByCoffeeShopId(id);
       setReviews(reviewData);
     };
 

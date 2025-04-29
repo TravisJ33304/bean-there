@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import CoffeeShopCard from "../components/CoffeeShopCard";
+import { fetchCoffeeShops } from "../services/api";
 
 const SearchPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -10,10 +10,13 @@ const SearchPage = () => {
   const handleSearch = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `/api/coffee_shops?search=${searchTerm}`
-      );
-      setCoffeeShops(response.data);
+      const allShops = await fetchCoffeeShops();
+      const filtered = searchTerm
+        ? allShops.filter((shop) =>
+            shop.name.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        : allShops;
+      setCoffeeShops(filtered);
     } catch (error) {
       console.error("Error fetching coffee shops:", error);
     } finally {

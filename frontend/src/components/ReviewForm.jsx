@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { createReview } from "../services/api";
 
 const ReviewForm = ({ coffeeShopId }) => {
   const [reviewText, setReviewText] = useState("");
@@ -13,14 +13,18 @@ const ReviewForm = ({ coffeeShopId }) => {
     setSuccess(null);
 
     try {
-      const response = await axios.post(`/api/reviews`, {
+      await createReview({
         coffee_shop_id: coffeeShopId,
         review_text: reviewText,
-        num_rating: rating,
+        num_rating: Number(rating),
       });
       setSuccess("Review submitted successfully!");
       setReviewText("");
       setRating(1);
+
+      if (onReviewSubmit) {
+        onReviewSubmit();
+      }
     } catch (err) {
       setError("Failed to submit review. Please try again.");
     }
