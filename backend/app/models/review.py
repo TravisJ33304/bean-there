@@ -7,6 +7,7 @@ PyObjectId = Annotated[str, BeforeValidator(str)]
 
 class Review(BaseModel):
     review_id: Optional[PyObjectId] = Field(default=None, alias="_id")
-    name: str = Field(...)
-    review: str = Field(...)
-    rating: int = Field(...)
+    coffee_shop_id: Optional[PyObjectId] = Field(default=None, alias="coffee_shop_id")
+    coffee_shop_name: str = Field(...)
+    review_text: str = Field(...)
+    num_rating: float = Field(...)
