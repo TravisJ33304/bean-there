@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import CoffeeShopDetail from "../components/CoffeeShopDetail";
 import ReviewList from "../components/ReviewList";
 import ReviewForm from "../components/ReviewForm";
-import { fetchCoffeeShop, fetchReviews } from "../services/api";
+// import { fetchCoffeeShop, fetchReviews } from "../services/api";
 
 const CoffeeShopPage = () => {
   const { id } = useParams();
