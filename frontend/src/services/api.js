@@ -9,9 +9,28 @@ const apiClient = axios.create({
   },
 });
 
-export const fetchCoffeeShops = async () => {
+export const fetchCoffeeShops = async (filters = {}) => {
   try {
-    const response = await apiClient.get("/api/coffee_shops");
+    const params = new URLSearchParams();
+
+    if (filters.features && filters.features.length > 0) {
+      filters.features.forEach((feature) => {
+        params.append("features", feature);
+      });
+    }
+
+    if (filters.city) params.append("city", filters.city);
+    if (filters.state) params.append("state", filters.state);
+
+    if (filters.minRating) params.append("min_rating", filters.minRating);
+    if (filters.maxRating) params.append("max_rating", filters.maxRating);
+
+    if (filters.sortBy) params.append("sort_by", filters.sortBy);
+    if (filters.sortOrder) params.append("sort_order", filters.sortOrder);
+
+    const response = await apiClient.get(
+      `/api/coffee_shops?${params.toString()}`
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching coffee shops:", error);
@@ -44,7 +63,7 @@ export const fetchReviewsByCoffeeShopId = async (coffeeShopId) => {
 
 export const createReview = async (reviewData) => {
   try {
-    const response = await apiClient.post("/api/reviews", reviewData);
+    const response = await apiClient.post("/api/reviews/", reviewData);
     return response.data;
   } catch (error) {
     console.error("Error creating review:", error);

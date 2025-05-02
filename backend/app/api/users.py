@@ -106,11 +106,11 @@ async def get_user(user_id: str):
 @router.get("/get_recommendations/{user_id}", response_model=list[CoffeeShop])
 async def get_recommendations(user_id: str):
     """
-    Get coffee shop recommendations based on user preferences.
+    Get coffee shop recommendations based on user preferences and location.
     Args:
         user_id (str): The ID of the user to get recommendations for.
     Returns:
-        list[CoffeeShop]: A list of recommended coffee shops.
+        list[CoffeeShop]: A list of recommended coffee shops filtered by preferences and location.
     Raises:
         HTTPException: If the user is not found.
     """
@@ -118,11 +118,27 @@ async def get_recommendations(user_id: str):
     user = user_collection.find_one({"_id": ObjectId(user_id)})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+
+    # Get user preferences and location
     preferences = user.get("preferences", [])
-    if not preferences:
-        return []
+    user_location = user.get("location", {})
+    user_city = user_location.get("city")
+
+    # Build query for coffee shop recommendations
+    query = {}
+
+    # Add preference filter if preferences exist
+    if preferences:
+        query["features"] = {"$all": preferences}
+
+    # Add city filter if user has a city set
+    if user_city:
+        query["location.city"] = {"$regex": user_city, "$options": "i"}
+
+    # Fetch coffee shops based on query
     coffee_shop_collection = get_collection("coffee_shops")
-    coffee_shops = coffee_shop_collection.find({"features": {"$all": preferences}})
+    coffee_shops = coffee_shop_collection.find(query).sort("rating", -1)
+
     result = [CoffeeShop(**coffee_shop) for coffee_shop in coffee_shops]
     return result
 

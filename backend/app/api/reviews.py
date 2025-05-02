@@ -6,14 +6,14 @@ from app.db.database import get_collection
 router = APIRouter()
 
 
-@router.post("/", response_model=ReviewCreate)
+@router.post("/", response_model=Review)
 async def create_review(review: ReviewCreate):
     """
     Create a new review for a coffee shop.
     Args:
         review (ReviewCreate): The review data to create.
     Returns:
-        ReviewCreate: The created review data.
+        Review: The created review data.
     """
     shops_collection = get_collection("coffee_shops")
     coffee_shop_id = review.coffee_shop_id
@@ -22,8 +22,11 @@ async def create_review(review: ReviewCreate):
         raise HTTPException(status_code=404, detail="Coffee shop not found")
     reviews_collection = get_collection("reviews")
     review_data = review.model_dump()
-    reviews_collection.insert_one(review_data)
-    return review
+    review_data["coffee_shop_name"] = coffee_shop["name"]
+    review_data["coffee_shop_id"] = ObjectId(coffee_shop_id)
+    result = reviews_collection.insert_one(review_data)
+    review_data["_id"] = str(result.inserted_id)
+    return Review(**review_data)
 
 
 @router.get("/{coffee_shop_id}", response_model=list[Review])
@@ -39,6 +42,6 @@ async def get_reviews(coffee_shop_id: str):
     id_serial = ObjectId(coffee_shop_id)
     reviews = [
         Review(**review)
-        for review in reviews_collection.find({"coffee_shop_id": id_serial})
+        for review in reviews_collection.find({"coffee_shop_id": id_serial}, limit=0)
     ]
     return reviews

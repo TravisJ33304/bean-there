@@ -13,6 +13,11 @@ const CoffeeShopPage = () => {
   const [coffeeShop, setCoffeeShop] = useState(null);
   const [reviews, setReviews] = useState([]);
 
+  const handleReviewSubmit = async () => {
+    const reviewData = await fetchReviewsByCoffeeShopId(id);
+    setReviews(reviewData);
+  };
+
   useEffect(() => {
     const getCoffeeShop = async () => {
       const shopData = await fetchCoffeeShopById(id);
@@ -20,11 +25,6 @@ const CoffeeShopPage = () => {
     };
 
     const getReviews = async () => {
-      const reviewData = await fetchReviewsByCoffeeShopId(id);
-      setReviews(reviewData);
-    };
-
-    const handleReviewSubmit = async () => {
       const reviewData = await fetchReviewsByCoffeeShopId(id);
       setReviews(reviewData);
     };
