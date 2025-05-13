@@ -27,7 +27,7 @@ This project is a web application designed for coffee enthusiasts to discover, r
 5. Run the FastAPI application:
 
    ```
-   uvicorn app.main:app --reload
+   python -m uvicorn app.main:app --reload
    ```
 
 ### Frontend
